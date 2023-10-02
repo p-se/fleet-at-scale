@@ -1,0 +1,62 @@
+apiVersion: fleet.cattle.io/v1alpha1
+kind: Cluster
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"fleet.cattle.io/v1alpha1","kind":"Cluster","metadata":{"annotations":{},"labels":{"name":"perf1"},"name":"perf1","namespace":"fleet-default"},"spec":{"kubeConfigSecret":"perf1-kubeconfig"}}
+  creationTimestamp: "2023-09-29T11:49:33Z"
+  generation: 2
+  labels:
+    name: perf1
+  name: perf1
+  namespace: fleet-default
+  resourceVersion: "1807071"
+  uid: 54d60700-1a22-4c95-b7d5-c5b35851b227
+spec:
+  clientID: r65sbs9psvp544bw8g6vzhxplf2gcnwfwqppjzfqnnwqc6chfvdt8q
+  kubeConfigSecret: perf1-kubeconfig
+status:
+  agent:
+    lastSeen: "2023-10-02T08:11:44Z"
+    namespace: cattle-fleet-system
+    nonReadyNodeNames: null
+    nonReadyNodes: 0
+    readyNodeNames:
+    - k3d-perf1-server-0
+    readyNodes: 1
+  agentDeployedGeneration: 0
+  agentMigrated: true
+  agentNamespaceMigrated: true
+  cattleNamespaceMigrated: true
+  conditions:
+  - lastUpdateTime: "2023-09-29T11:56:49Z"
+    status: "True"
+    type: Ready
+  - lastUpdateTime: "2023-10-02T08:11:44Z"
+    status: "True"
+    type: Processed
+  - lastUpdateTime: "2023-09-29T11:49:37Z"
+    status: "True"
+    type: Imported
+  - lastUpdateTime: "2023-09-29T11:49:33Z"
+    status: "True"
+    type: Reconciled
+  desiredReadyGitRepos: 0
+  display:
+    readyBundles: 1/1
+    readyNodes: 1/1
+    sampleNode: k3d-perf1-server-0
+  namespace: cluster-fleet-default-perf1-ff034edf0e46
+  readyGitRepos: 0
+  resourceCounts:
+    desiredReady: 0
+    missing: 0
+    modified: 0
+    notReady: 0
+    orphaned: 0
+    ready: 0
+    unknown: 0
+    waitApplied: 0
+  summary:
+    desiredReady: 1
+    ready: 1
