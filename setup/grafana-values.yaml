@@ -682,6 +682,11 @@ dashboards:
       gnetId: 15760
       revision: 1
       datasource: Prometheus
+    kubernetes-apiserver:
+      gnetId: 15761
+      revision: 1
+      datasource: Prometheus
+
   # default:
   #   some-dashboard:
   #     json: |
