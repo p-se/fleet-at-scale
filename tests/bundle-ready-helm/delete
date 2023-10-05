@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -e -o pipefail
+
+NS=${NS:-fleet-local}
+kubectl -n fleet-local get bundle -o=name |
+    grep -E 'foo-[0-9]+-helm' |
+    xargs kubectl -n fleet-local delete
