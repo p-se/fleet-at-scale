@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+NAMESPACE=${NAMESPACE:-fleet-default}
+kubectl get --namespace="$NAMESPACE" cluster \
+    --output=custom-columns=":metadata.name" | grep "^cluster-" | while read -r CLUSTER_NAME; do
+
+    kubectl get --namespace="$NAMESPACE" cluster "$CLUSTER_NAME" -o jsonpath='{.metadata.name}' |
+        xargs -I {} kubectl delete --namespace="$NAMESPACE" cluster {} &
+
+    if (($(jobs | wc -l) >= 100)); then
+        wait -n
+    fi
+done
+wait
+
+kubectl get --namespace=fleet-default bundle --output=custom-columns=":metadata.name" |
+    grep "^fleet-agent-cluster" | while read -r BUNDLE_NAME; do
+
+    kubectl delete --namespace=fleet-default bundle "$BUNDLE_NAME" &
+
+    if (($(jobs | wc -l) >= 100)); then
+        wait -n
+    fi
+done
+wait

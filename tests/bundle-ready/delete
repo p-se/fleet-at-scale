@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+set -e -o pipefail
+
+NS=${NS:-fleet-local}
+
+# create a bundle using fleetcli
+for i in $(seq 1 1000); do
+    if [ -d "bundle-$i" ]; then
+        rm -rf "bundle-$i"
+    fi
+done
+
+kubectl get --namespace="$NS" bundle --output=custom-columns=":metadata.name" |
+    grep "^foo-" | while read -r BUNDLE_NAME; do
+
+    kubectl -n "$NS" delete bundle "$BUNDLE_NAME" &
+
+    if (($(jobs | wc -l) >= 100)); then
+        wait -n
+    fi
+done
+wait

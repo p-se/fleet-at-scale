@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+set -ex -o pipefail
+
+# create a bundle using fleetcli
+for i in $(seq 1 1000); do
+    if [ -d "bundle-$i" ]; then
+        rm -rf "bundle-$i"
+    fi
+    mkdir -p "bundle-$i"
+    cp fleet.yaml "bundle-$i/fleet.yaml"
+    cat <<EOF >"bundle-$i/configmap.yaml"
+    apiVersion: v1
+    kind: ConfigMap
+    metadata:
+        name: bundle-$i
+    data:
+        key: value-$i
+EOF
+    fleetcli apply "foo-$i" "bundle-$i"
+done

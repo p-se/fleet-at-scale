@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+set -ex -o pipefail
+
+NAMESPACE=${NAMESPACE:-fleet-default}
+
+FIRST_CLUSTER_NAME=$(
+    kubectl get --namespace=$NAMESPACE cluster \
+        --output=custom-columns=":metadata.name" |
+        grep -v '^$' | head -1
+)
+kubectl get --namespace=$NAMESPACE cluster "$FIRST_CLUSTER_NAME" --output=yaml >cluster.yaml
+
+# # Create clusters sequentially
+# for i in {1..2000}; do
+#     CLUSTER_ID=$(echo "$i" | md5sum | head --bytes 12)
+#     cat cluster.yaml | sed "s/$FIRST_CLUSTER_NAME/cluster-$CLUSTER_ID/g" | kubectl apply --filename=-
+# done
+
+# Create clusters in batches in parallel
+for ((i = 1; i <= 2000; i += 100)); do
+    for ((j = i; j < i + 100 && j <= 2000; j++)); do
+        CLUSTER_ID=$(echo "$j" | md5sum | head --bytes 12)
+        cat cluster.yaml | sed "s/$FIRST_CLUSTER_NAME/cluster-$CLUSTER_ID/g" | kubectl apply --filename=- &
+    done
+    wait
+done
+
+function delete_clusters() {
+    NAMESPACE=fleet-default
+    kubectl get --namespace=$NAMESPACE cluster \
+        --output=custom-columns=":metadata.name" | grep "^cluster-" | while read -r CLUSTER_NAME; do
+        kubectl delete --namespace=$NAMESPACE cluster "$CLUSTER_NAME" &
+    done
+    wait
+}
