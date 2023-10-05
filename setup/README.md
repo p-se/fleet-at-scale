@@ -29,3 +29,9 @@ kubectl get secret --namespace default grafana -o jsonpath="{.data.admin-passwor
 kubectl port-forward --namespace default svc/grafana 3000:80
 kubectl port-forward --namespace default svc/prometheus-server 9090:80
 ```
+
+## Sources
+
+### Dashboards
+
+Dashboards are taken from [dotdc/grafana-dashboards-kubernetes](https://github.com/dotdc/grafana-dashboards-kubernetes#install-manually) project.
