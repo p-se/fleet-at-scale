@@ -1,28 +1,19 @@
 #!/bin/bash
 # Description: setup managed fleet agent in the downstream cluster (manager initiated registration)
 
-set -euxo pipefail
-
-# if [ ! -d ./charts/fleet ]; then
-#   echo "please change the current directory to the fleet repo checkout"
-#   exit 1
-# fi
+set -euo pipefail
+set -x
 
 name="$1"
-#baseport="$2"
-#n="$3"
-#host=""
-#port=$(( baseport + n ))
 port=6443
 
-# fetching from local kubeconfig
-# k3d-perf2-server-0
+# use docker network's internal IP, default port
 host=$( docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' k3d-$name-server-0 )
+server="https://$host:$port"
+
 ca=$( kubectl config view --flatten -o jsonpath='{.clusters[?(@.name == "k3d-'$name'")].cluster.certificate-authority-data}' )
 client_cert=$( kubectl config view --flatten -o jsonpath='{.users[?(@.name == "admin@k3d-'$name'")].user.client-certificate-data}' )
 token=$( kubectl config view --flatten -o jsonpath='{.users[?(@.name == "admin@k3d-'$name'")].user.client-key-data}' )
-# use docker network's internal IP, default port
-server="https://$host:$port"
 
 value=$(cat <<EOF
 apiVersion: v1
