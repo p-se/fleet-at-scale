@@ -49,6 +49,14 @@ all have their up- and downsides.
     a Grafana instance, so setup is a bit more complicated for "replay".
   - Not a good way to share it on a public URL.
 
+- Grafana Mimir
+  - 100% compatible Prometheus storage.
+  - Ability to receive metrics from Prometheus, use Grafana Agent or load Prometheus' TSDB blocks directly.
+    - Similar functionality can be achieved with the expermiental command [`promtool tsdb create-blocks-from`](https://prometheus.io/docs/prometheus/latest/storage/#backfilling-for-recording-rules)
+  - [`mimirtool`](https://grafana.com/docs/mimir/latest/manage/tools/mimirtool/) available.
+    - Includes `read-remote` and `backfill` [commands](https://grafana.com/docs/mimir/latest/manage/tools/mimirtool/#commands).
+  - TODO: verify importing Prometheus snapshots?
+
 - Other options exist but have been less extensive be evaluated
 
   - [Grafana Image
