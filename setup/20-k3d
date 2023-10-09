@@ -2,12 +2,13 @@
 
 set -euxo pipefail
 
-docker_mirror=${docker_mirror-}
+docker_mirror=${DOCKER_MIRROR:-}
+extra_k3d_args="${EXTRA_K3D_ARGS:-}"
 name=${1-upstream} # cluster name
 i=${2-0}           # port offset
 net=${3}           # network name
 
-args=""
+args="${EXTRA_K3D_ARGS}"
 if [ -n "$docker_mirror" ]; then
   TMP_CONFIG="$(mktemp)"
   trap "rm -f $TMP_CONFIG" EXIT
@@ -18,9 +19,9 @@ mirrors:
       endpoint:
             - $docker_mirror
 EOF
-  args="--registry-config $TMP_CONFIG"
+  args="$args --registry-config $TMP_CONFIG"
 fi
 
-args="$args --network $net"
+args="$args --network $net --no-lb --k3s-arg=--disable=servicelb,metrics-server,traefik@server:* --kubeconfig-switch-context=false"
 
-k3d cluster create "$name" --servers 1 --api-port $(( 36443 + i )) -v /dev/mapper:/dev/mapper $args
+k3d cluster create "$name" --servers 1 --api-port $(( 36443 + i )) $args
