@@ -13,9 +13,6 @@ helm upgrade --install -n monitoring --create-namespace \
     --version 25.0.0 \
     --values prometheus-values.yaml \
     prometheus prometheus-community/prometheus
-kubectl -n monitoring get configmap prometheus-server -o yaml \
-    | sed 's/job_name: kubernetes-apiservers/job_name: apiserver/' \
-    | kubectl replace -f -
 ```
 > NOTE: rename one of the scraping jobs to match expectations from the Grafana dashboard
 
