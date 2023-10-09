@@ -45,9 +45,8 @@ setup_upstream() {
 
 install_fleet() {
   helm -n cattle-fleet-system upgrade --install --create-namespace fleet-crd "${FLEET_CRDS_CHART_URL}"
-  # host=$( docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' k3d-upstream-server-0 ) 
-  host=$( docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' minikube ) 
-  ca=$( kubectl config view --flatten -o jsonpath='{.clusters[?(@.name == "minikube")].cluster.certificate-authority-data}' | base64 -d )
+  host=$( docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' k3d-upstream-server-0 )
+  ca=$( kubectl config view --flatten -o jsonpath='{.clusters[?(@.name == "k3d-upstream")].cluster.certificate-authority-data}' | base64 -d )
   server="https://$host:6443"
   helm -n cattle-fleet-system upgrade --install \
     --set apiServerCA="$ca" \
