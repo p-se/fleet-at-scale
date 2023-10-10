@@ -1,4 +1,9 @@
+alertmanager:
+  enabled: false
+
 server:
+  persistentVolume:
+    enabled: false
   global:
     ## How frequently to scrape targets by default
     ##
